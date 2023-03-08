@@ -102,7 +102,7 @@ if __name__ == "__main__":
 
     key = "She is beautiful"
     iv_nonce = "Many happy days "
-    iv_key = "I have a secret"
+    iv_key = "I have a secret "
     message = "This is a message to you from Bob"
 
     # https://gchq.github.io/CyberChef/#recipe=AES_Encrypt(%7B'option':'Hex','string':'69%2020%206c%2069%206b%2065%2020%2074%206f%2020%2070%2061%2072%2074%2079%2020'%7D,%7B'option':'Hex','string':'64%2049%2068%2068%203b%208a%207e%2059%200c%20a1%2060%2018%20b7%207f%2085%20d1'%7D,'CBC','Raw','Hex',%7B'option':'Hex','string':''%7D)From_Hex('Auto')To_Decimal('Space',false)&input=VGVzdCBkYXRhIHNob3dpbmcgbW9yZSB0aGFuIDEgYmxvY2sgdG8gYmUgZW5jb2RlZCBieSBtZQ
