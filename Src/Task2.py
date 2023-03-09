@@ -18,7 +18,6 @@ class CBC_AES:
             print(f"Initialisation Vector: 0x{''.join([ '%02x' % x for x in self.iv])}")
             print(f"Master Key: {self.key:#x}")
 
-
     @staticmethod
     def iv_generate(key, data):
         nonce_key = aes.utils.bytes2int(bytes(key[::-1], "utf8"))
@@ -57,12 +56,6 @@ class CBC_AES:
             print(f"Encoded Data: {encoded_data}")
             print(f"Ciphertext: {complete_ciphertext}")
             print(f"Ciphertext (formatted): 0x{''.join([ '%02x' % x for x in complete_ciphertext])}")
-
-
-        # print(json.dumps(blocks))
-        # print(json.dumps(ciphertext))
-        # print(f"String Length: {len(data)} \t Padding Bytes: {pads}")
-        # print(encoded_data)
 
         return complete_ciphertext
 
