@@ -71,7 +71,9 @@ if __name__ == "__main__":
     # TEST CASE 4 - Invalid Padding
     print("\n" + "-" * 40 + " TEST CASE 4 " + "-" * 40)
     print("Message contains 4 padded bytes with value 7")
-    message = [7, 7, 7, 7, 33, 100, 108, 114, 111, 87, 32, 111, 108, 108, 101, 72]
+    data = "Hello World!"
+    message = aes.utils.int2arr8bit(aes.utils.bytes2int(bytes(data[::-1], "utf8")), len(data))
+    message.extend([7 for i in range(16 - len(data))])
     xored_data = []
     for x in range(16):
         xored_data.append(message[x] ^ iv[x])
