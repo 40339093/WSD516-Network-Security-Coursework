@@ -1,52 +1,44 @@
 from fun_padding_oracle import fun_padding_oracle
 from Task2 import CBC_AES
-import copy
 import json
+import copy
 
 
-crack = lambda x, y, z: x ^ y ^ z
+def padded_attack(iv, ciphertext):
+    g_array = [0 for i in range(len(ciphertext))]
 
+    for byte in range(len(ciphertext)-1, -1, -1):
+        padding = [0 for i in range(byte)]
+        padding.extend([(16 - byte) for i in range(16 - byte)])
+        Cdash1 = [iv[x] ^ padding[x] ^ g_array[x] for x in range(len(ciphertext))]
 
-def padded_attack(ciphertext):
-    blocks = [[ciphertext[i + j] for j in range(16)] for i in range(0, len(ciphertext) - 1, 16)]
-    Pguess_array = []
-    X_array = []
+        for g in range(255, -1, -1):
+            Cdash2 = copy.copy(Cdash1)
+            Cdash2[byte] = Cdash1[byte] ^ g
+            oracle = fun_padding_oracle(Cdash2, ciphertext, "B911959")
+            if oracle:
+                g_array[byte] = g
+                # print(f"Byte: {byte}  Pad: {16-byte}  g: {g}  Oracle: {oracle}")
+                break
 
-    for index, block in reversed(list(enumerate(blocks))):
-        if index == 0:
-            break
-        prev_block = blocks[index - 1]
-        # This is Pguess
-        Pguess = [0 for i in range(len(block))]
-        X = [0 for i in range(len(block))]
-        for byte in range(len(block) - 1, -1, -1):
-            padding = [0 for i in range(byte)]
-            padding.extend([(16 - byte) for i in range(16 - byte)])
-            for x in range(255, -1, -1):
-                # Value of x also needs to be stored
-                Pguess[byte] = crack((16-byte), prev_block[byte], x)
-                X[byte] = x
-                if fun_padding_oracle(padding, block, "B911959"):
-                    print(f"Byte {byte}:   X: {x}   Padding: {16-byte}")
-                    break
-        Pguess_array.append(Pguess)
-        X_array.append(X)
-    return {
-        "Pguess": Pguess_array,
-        "X": X_array
-    }
+    return g_array
+
 
 if __name__ == "__main__":
     iv = CBC_AES.iv_generate("I have a secret ", "Many happy days ")
-    ciphertext = [215, 111, 91, 253, 156, 68, 68, 10, 120, 235, 241, 47, 48, 18, 150, 145]
-    encrypted_data = copy.copy(iv)
-    encrypted_data.extend(ciphertext)
-    cracked = padded_attack(encrypted_data)
+    ciphertext = [163, 12, 163, 152, 142, 134, 172, 157, 98, 105, 216, 76, 228, 127, 51, 157, 70, 133, 28, 176, 101, 155, 225, 176, 218, 248, 210, 27, 8, 50, 91, 136]
+    print(f"Encrypted Data: {ciphertext}")
+    print(f"Data is split into {len(ciphertext)/16} blocks")
+    print(f"Initialisation Vector for c0: 0x{''.join([ '%02x' % x for x in iv])}")
+    blocks = [[ciphertext[i+j] for j in range(16)] for i in range(0, len(ciphertext)-1, 16)]
+    plaintext = []
+    for index, block in enumerate(blocks):
+        if index == 0:
+            plaintext.append(padded_attack(iv, block))
+        else:
+            plaintext.append(padded_attack(blocks[index - 1], block))
 
-    print(json.dumps(cracked, indent=2))
-
-    # plaintext = [0 for i in range(len(ciphertext))]
-    # for byte in ciphertext:
-    #     plaintext[byte] = crack(cracked[byte], iv[byte], )
-    #
-    # pass
+    plaintext_str = "".join([chr(x) for x in sum(plaintext, [])])
+    plaintext_str = plaintext_str.strip(plaintext_str[-1])
+    print(f"Decrypted Message: {plaintext_str}")
+    print(f"Padding: {plaintext[-1][-1]}")
