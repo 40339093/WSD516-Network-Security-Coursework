@@ -40,6 +40,7 @@ if __name__ == "__main__":
     message = "Test1"
     print(f"Message: {message}")
     ciphertext = validation.cbc_encrypt(message)
+    print(f"Ciphertext Array: {ciphertext}")
     print(f"Ciphertext: 0x{''.join([ '%02x' % x for x in ciphertext])}")
     oracle = fun_padding_oracle(iv, ciphertext, student_ID)
     print(f"Oracle Output: {oracle}")
