@@ -24,7 +24,7 @@ class CBC_AES:
         CBC Class Initialiser
         Stores the encryption key and initialisation vector as well as creating the ECB Cipher object
 
-        :param key: The encryption key to use, passed as a 128-bit integer
+        :param key: The encryption key to use, passed as a string
         :param iv: The Initialisation Vector for the 1st block of CBC passed as an array of 8-bit integers
         :param verbose: Bool flag to enable Verbose output to stdout (Default: False)
         """
@@ -56,7 +56,7 @@ class CBC_AES:
         """
         Generates the Initialisation Vector
 
-        :param key: Key to encrypt the initialisation vector with as a 128-bit integer
+        :param key: Key to encrypt the initialisation vector with as a string
         :param data: Nonce to be encrypted as a string
         :return: 16 byte array of 8-bit integers
         """
