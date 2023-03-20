@@ -100,7 +100,7 @@ class CBC_AES:
             if index == 0:
                 for x in range(16):
                     xored_block.append(block[x] ^ self.iv[x])
-            # Previosu block used for all other blocks
+            # Previous block used for all other blocks
             else:
                 for x in range(16):
                     xored_block.append(block[x] ^ ciphertext[index-1][x])
